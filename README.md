@@ -16,7 +16,8 @@ Perfect for pranks, memes, or just having a dedicated Lenny button on your desk.
 ## Hardware
 
 - **Required**: Raspberry Pi Pico or Pico W (RP2040)
-- **Trigger**: Short GPIO 4 to GPIO 5 (or use a physical button between them)
+- **Linux Mode**: Short GPIO 4 to GPIO 5
+- **Windows Mode**: Short GPIO 4 to GPIO 6
 - **Power**: USB connection provides power and data
 - **LED**: Onboard LED (GPIO 25) for status indication
 
@@ -38,13 +39,21 @@ This project uses the RP2040's native USB controller with TinyUSB to implement a
 
 ### Unicode Input Method
 
-The Lenny face contains non-ASCII characters. On Linux, we use the **IBus/GTK Unicode input method**:
+The Lenny face contains non-ASCII characters. This project supports both Linux and Windows:
+
+**Linux Mode** (GPIO 4 → GPIO 5):
+Uses the **IBus/GTK Unicode input method**:
 1. Press `Ctrl+Shift+U` to enter Unicode mode
 2. Type the hexadecimal codepoint (e.g., `0361` for ◌͡ combining double inverted breve)
 3. Press Space to confirm
 4. Character is inserted
 
-This sequence is automated for each Unicode character in the Lenny face:
+**Windows Mode** (GPIO 4 → GPIO 6):
+Uses the **Alt+X method** (works in Word, WordPad, many apps):
+1. Type the hexadecimal codepoint
+2. Press `Alt+X` to convert to Unicode character
+
+Both methods automatically type these codepoints:
 - `0x0361` - ◌͡ combining double inverted breve
 - `0x00b0` - ° degree sign
 - `0x035c` - ◌͜ combining double breve below
@@ -64,11 +73,12 @@ Each GPIO read uses majority voting across 5 samples to filter electrical noise.
 ## Usage
 
 ### Quick Start
-1. Flash `lenny_keyboard.uf2` or `lenny_debug.uf2` to your Pico
+1. Flash `lenny_keyboard.uf2` to your Pico
 2. Plug into your computer
 3. Wait for 3 LED blinks (device ready)
-4. Short GPIO 4 to GPIO 5
-5. Watch the Lenny face appear! ( ͡° ͜ʖ ͡° )
+4. **For Linux**: Short GPIO 4 to GPIO 5 (LED blinks once)
+5. **For Windows**: Short GPIO 4 to GPIO 6 (LED blinks twice)
+6. Watch the Lenny face appear! ( ͡° ͜ʖ ͡° )
 
 ### Flashing Firmware
 1. Hold BOOTSEL button while plugging in USB
@@ -117,7 +127,9 @@ make -j4
 
 ### Configuration
 Edit `lenny_keyboard.c` or `lenny_debug.c` to customize:
-- `GPIO_TRIGGER_IN` / `GPIO_TRIGGER_OUT` - Pin assignments
+- `GPIO_TRIGGER_OUT` - Ground reference pin (default: GPIO 4)
+- `GPIO_TRIGGER_LINUX` - Linux mode trigger (default: GPIO 5)
+- `GPIO_TRIGGER_WINDOWS` - Windows mode trigger (default: GPIO 6)
 - `DEBOUNCE_SAMPLES` - Number of consistent reads required
 - `DEBOUNCE_INTERVAL_MS` - Time between debounce samples
 - `TRIGGER_COOLDOWN_MS` - Minimum time between activations
@@ -132,9 +144,9 @@ Edit `lenny_keyboard.c` or `lenny_debug.c` to customize:
 
 ## Compatibility
 
-✅ **Linux**: Full Unicode support via IBus/GTK  
-⚠️ **Windows**: May require registry tweaks for Unicode input (or use Alt+numpad method)  
-⚠️ **macOS**: Unicode input not supported via Ctrl+Shift+U (alternative methods needed)
+✅ **Linux**: Full Unicode support via IBus/GTK (GPIO 4 → GPIO 5)  
+✅ **Windows**: Alt+X method for Word/WordPad/compatible apps (GPIO 4 → GPIO 6)  
+⚠️ **macOS**: Limited Unicode input support (alternative methods needed)
 
 ## Troubleshooting
 
