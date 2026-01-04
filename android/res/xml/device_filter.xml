@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Filter for Pico W Lenny Face Keyboard -->
+    <!-- Vendor ID: 0xCafe, Product ID: 0x4001 -->
+    <usb-device vendor-id="51966" product-id="16385" />
+</resources>

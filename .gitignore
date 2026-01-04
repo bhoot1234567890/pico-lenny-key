@@ -1,0 +1,20 @@
+# Build artifacts
+build/
+*.uf2
+*.elf
+*.dis
+*.map
+*.bin
+*.hex
+*.pio
+*.obj
+*.o
+*.d
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+# VSCode
+.vscode/
+# Mac
+.DS_Store
