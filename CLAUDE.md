@@ -68,10 +68,18 @@ TUD_HID_DESCRIPTOR(ITF_NUM_HID, 5, HID_ITF_PROTOCOL_KEYBOARD, sizeof(desc_hid_re
 
 ## TinyUSB Configuration
 
-Single `tusb_config.h` file used by both builds. Both define:
+Two separate config files for different build targets:
+
+| File | CDC Enabled | HID Enabled | Buffer Sizes | Used By |
+|------|-------------|-------------|--------------|---------|
+| `tusb_config_hid.h` | No | Yes | 16-byte HID | `lenny_keyboard` (production) |
+| `tusb_config_debug.h` | Yes | Yes | 256-byte CDC RX/TX, 16-byte HID | `lenny_debug` (debug) |
+
+The CMake build uses `target_compile_definitions` to set `TUSB_CONFIG_HEADER` per target, selecting the appropriate config file.
+
+Both define:
 - `CFG_TUD_HID 1` - HID keyboard enabled
-- `CFG_TUD_CDC 1` - CDC serial enabled (only used by debug version)
-- `CFG_TUSB_RHPORT0_MODE (OPT_MODE_DEVICE | ...)` - Device mode only
+- `CFG_TUSB_RHPORT0_MODE OPT_MODE_DEVICE` - Device mode only
 
 ## GPIO Configuration
 
